@@ -23,6 +23,7 @@ class Login(APIView):
         user_details = models.User.objects.filter(email=email)
         if user_details:
             url = request.build_absolute_uri('/o/token/')
+            print("url ::", url)
             r = requests.post(url, data={'grant_type':'password', # your defined grant type
                                     'client_id': settings.OAUTH_CLIENT_ID, # your clinet id
                                     'client_secret': settings.OAUTH_CLIENT_SECRET, #your client secret
@@ -31,9 +32,12 @@ class Login(APIView):
                                     'redirect_uri': request.build_absolute_uri('/menu')
                             }
             )
-            
+            print("r::", r)
             return Response(r.json())
+        else:
+            return Response(json.loads('{"message": "User does not exists."}'))
 
+    
 
 class UserRegister(APIView):
     permission_classes = (permissions.AllowAny,)
