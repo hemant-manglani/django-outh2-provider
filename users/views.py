@@ -13,11 +13,7 @@ from django.utils.decorators import method_decorator
 from django.views.decorators.debug import sensitive_post_parameters
 from django.utils.translation import gettext_lazy as _
 from django.db import transaction
-
-import environ
-# Initialise environment variables
-env = environ.Env()
-environ.Env.read_env()
+from django.conf import settings
 
 class Login(APIView):
     permission_classes = (permissions.AllowAny,)
@@ -28,8 +24,8 @@ class Login(APIView):
         if user_details:
             url = request.build_absolute_uri('/o/token/')
             r = requests.post(url, data={'grant_type':'password', # your defined grant type
-                                    'client_id': env('CLIENT_ID'), # your clinet id
-                                    'client_secret': env('CLIENT_SECRET'), #your client secret
+                                    'client_id': settings.OAUTH_CLIENT_ID, # your clinet id
+                                    'client_secret': settings.OAUTH_CLIENT_SECRET, #your client secret
                                     'username': user_details[0].username, # your username that you get from user
                                     'password':password, #your password that you get from user
                                     'redirect_uri': request.build_absolute_uri('/menu')
