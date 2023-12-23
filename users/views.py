@@ -32,8 +32,17 @@ class Login(APIView):
                                     'redirect_uri': request.build_absolute_uri('/menu')
                             }
             )
-            print("r::", r)
-            return Response(r.json())
+            print(r.status_code)
+            try:
+                res = r.json
+            except:
+                res = r
+            result = {
+                "status": str(r.status_code),
+                "data": res
+            }
+            print("r::", result)
+            return Response(json.loads(json.dumps(result)))
         else:
             return Response(json.loads('{"message": "User does not exists."}'))
 
