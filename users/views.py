@@ -23,8 +23,10 @@ class Login(APIView):
         request_data = request.data
         try:
             email = request_data.get('email')
+            print("email::", email)
             password = request_data.get('password')
             user_details = models.User.objects.filter(email=email)
+            print("user_details::", user_details)
             if user_details:
                 url = request.build_absolute_uri('/o/token/')
                 r = requests.post(url, data={'grant_type': 'password',  # your defined grant type
@@ -36,6 +38,7 @@ class Login(APIView):
                                              }
                                   )
                 print(r.status_code)
+                print("json ::", r.json())
                 return Response(r.json())
             else:
                 return Response(json.loads('{"message": "User does not exists."}'))
